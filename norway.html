@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dan's Stag – Norway 🇳🇴</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  :root {
+    --navy: #0d1b2a;
+    --fjord: #1a3a4a;
+    --snow: #f0f4f7;
+    --gold: #c9a84c;
+    --mist: #7a9bac;
+    --white: #ffffff;
+    --green: #4caf7d;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--navy);
+    color: var(--snow);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 80% 60% at 20% 80%, rgba(26,58,74,0.6) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 20%, rgba(201,168,76,0.08) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 48px;
+    animation: fadeDown 0.8s ease both;
+  }
+
+  .flag { font-size: 48px; display: block; margin-bottom: 16px; }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 6vw, 3.6rem);
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  header h1 em { font-style: italic; color: var(--gold); }
+
+  .subtitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: var(--mist);
+    text-transform: uppercase;
+    margin-top: 12px;
+  }
+
+  .badges {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+
+  .badge {
+    display: inline-block;
+    background: rgba(201,168,76,0.12);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 40px;
+    padding: 8px 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+
+  .badge.info {
+    background: rgba(122,155,172,0.1);
+    border-color: rgba(122,155,172,0.25);
+    color: var(--mist);
+    font-size: 0.72rem;
+  }
+
+  .notice {
+    background: rgba(201,168,76,0.06);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-left: 3px solid var(--gold);
+    border-radius: 4px;
+    padding: 14px 18px;
+    margin-bottom: 48px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .notice-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+
+  .notice p {
+    font-size: 0.85rem;
+    color: var(--snow);
+    line-height: 1.5;
+  }
+
+  .notice p em {
+    color: var(--gold);
+    font-style: normal;
+    font-weight: 500;
+  }
+
+  .section-divider {
+    width: 40px;
+    height: 1px;
+    background: rgba(201,168,76,0.3);
+    margin: 0 auto 48px;
+  }
+
+  .day {
+    margin-bottom: 48px;
+    animation: fadeUp 0.7s ease both;
+  }
+
+  .day:nth-child(3) { animation-delay: 0.15s; }
+  .day:nth-child(4) { animation-delay: 0.25s; }
+  .day:nth-child(5) { animation-delay: 0.35s; }
+  .day:nth-child(6) { animation-delay: 0.45s; }
+
+  .day-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(200,221,232,0.12);
+  }
+
+  .day-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: rgba(201,168,76,0.2);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .day-info h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  .day-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--mist);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .events { display: flex; flex-direction: column; }
+
+  .event {
+    display: grid;
+    grid-template-columns: 56px 28px 1fr auto;
+    gap: 0 12px;
+    align-items: start;
+    padding: 12px 0;
+  }
+
+  .event-time {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--mist);
+    padding-top: 3px;
+    text-align: right;
+    letter-spacing: 0.05em;
+  }
+
+  .event-dot-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .event-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--fjord);
+    border: 2px solid var(--mist);
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .event.highlight .event-dot {
+    background: var(--gold);
+    border-color: var(--gold);
+    box-shadow: 0 0 10px rgba(201,168,76,0.4);
+  }
+
+  .event-line {
+    width: 1px;
+    flex: 1;
+    background: rgba(200,221,232,0.1);
+    margin-top: 4px;
+    min-height: 20px;
+  }
+
+  .event:last-child .event-line { display: none; }
+
+  .event-label {
+    font-size: 0.65rem;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--mist);
+    margin-bottom: 2px;
+  }
+
+  .event.highlight .event-label { color: var(--gold); }
+
+  .event-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--snow);
+    line-height: 1.3;
+  }
+
+  .event-note {
+    font-size: 0.78rem;
+    color: var(--mist);
+    margin-top: 3px;
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  .event-title a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .event-title a:hover {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+
+  .optional-tag {
+    display: inline-block;
+    background: rgba(122,155,172,0.15);
+    border: 1px solid rgba(122,155,172,0.25);
+    border-radius: 3px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    color: var(--mist);
+    text-transform: uppercase;
+    padding: 1px 5px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  .event-cost {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--green);
+    padding-top: 4px;
+    white-space: nowrap;
+    text-align: right;
+    min-width: 40px;
+  }
+
+  .event-cost.free { color: rgba(122,155,172,0.5); }
+  .event-cost.tbc  { color: rgba(122,155,172,0.5); font-style: italic; }
+
+  footer {
+    margin-top: 60px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(200,221,232,0.1);
+    text-align: center;
+  }
+
+  footer p {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: rgba(122,155,172,0.4);
+    letter-spacing: 0.1em;
+    line-height: 2;
+  }
+
+  /* Map */
+  .map-section {
+    margin-bottom: 48px;
+    animation: fadeUp 0.7s ease both;
+  }
+
+  .map-section h3 {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--mist);
+    margin-bottom: 12px;
+  }
+
+  #map {
+    width: 100%;
+    height: 380px;
+    border-radius: 6px;
+    border: 1px solid rgba(200,221,232,0.1);
+    overflow: hidden;
+  }
+
+  /* Override Leaflet popup styles */
+  .leaflet-popup-content-wrapper {
+    background: #0d1b2a;
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 4px;
+    color: #f0f4f7;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+
+  .leaflet-popup-tip { background: #0d1b2a; }
+
+  .leaflet-popup-content {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    line-height: 1.4;
+    margin: 10px 14px;
+  }
+
+  .popup-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #c9a84c;
+    margin-bottom: 3px;
+  }
+
+  .popup-title { font-weight: 500; color: #f0f4f7; }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <span class="flag">🇳🇴</span>
+    <h1>Dan's Stag<br><em>Norway</em></h1>
+    <p class="subtitle">25–28 June 2026 &nbsp;·&nbsp; Bergen → Flåm → Mountains</p>
+    <div class="badges">
+      <span class="badge">~£583 per person</span>
+      <span class="badge info">Food &amp; drink excluded</span>
+    </div>
+  </header>
+
+  <div class="section-divider"></div>
+
+  <div class="notice">
+    <div class="notice-label">🥃 Food &amp; Drink</div>
+    <p>Food and drink costs are not included in the estimate above. The plan is to <em>fly in supplies</em> — proposing flying in some choice whiskies to keep us going through the mountains on Saturday night.</p>
+  </div>
+
+  <!-- MAP -->
+  <div class="map-section">
+    <h3>Overview Map</h3>
+    <div id="map"></div>
+  </div>
+
+  <!-- DAY 1 -->
+  <div class="day">
+    <div class="day-header">
+      <span class="day-number">1</span>
+      <div class="day-info">
+        <h2>Fly In</h2>
+        <p class="day-date">Thursday 25th June</p>
+      </div>
+    </div>
+    <div class="events">
+      <div class="event">
+        <span class="event-time">21:00</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <div class="event-body">
+          <div class="event-label">Flight</div>
+          <div class="event-title">Gatwick → Bergen</div>
+          <div class="event-note">Lands 23:55</div>
+        </div>
+        <span class="event-cost">£197</span>
+      </div>
+      <div class="event">
+        <span class="event-time">00:30</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <div class="event-body">
+          <div class="event-label">Transit</div>
+          <div class="event-title">Tram to city centre</div>
+        </div>
+        <span class="event-cost">£3</span>
+      </div>
+      <div class="event">
+        <span class="event-time">01:00</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <div class="event-body">
+          <div class="event-label">Hotel</div>
+          <div class="event-title">Check in, Bergen</div>
+          <div class="event-note">Twin rooms</div>
+        </div>
+        <span class="event-cost">£69</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAY 2 -->
+  <div class="day">
+    <div class="day-header">
+      <span class="day-number">2</span>
+      <div class="day-info">
+        <h2>The Fjord</h2>
+        <p class="day-date">Friday 26th June</p>
+      </div>
+    </div>
+    <div class="events">
+      <div class="event highlight">
+        <span class="event-time">08:00</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <div class="event-body">
+          <div class="event-label">Ferry</div>
+          <div class="event-title"><a href="https://www.norled.no/en/fjordcruise/sognefjord-bergen-flam/" target="_blank">Fjord Cruise – 6 hours</a></div>
+          <div class="event-note">"King of the Fjords" – Norway's most epic fjord. Arrives Flåm 15:30.</div>
+        </div>
+        <span class="event-cost">£98</span>
+      </div>
+      <div class="event highlight">
+        <span class="event-time">16:00</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <div class="event-body">
+          <div class="event-label">Beer <span class="optional-tag">Optional</span></div>
+          <div class="event-title"><a href="https://www.flamsbrygga.no" target="_blank">Ægir BrewPub, Flåm</a></div>
+          <div class="event-note">Viking hall brew pub. Legendary spot.</div>
+        </div>
+        <span class="event-cost tbc">TBC</span>
+      </div>
+      <div class="event">
+        <span class="event-time">23:30</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <div class="event-body">
+          <div class="event-label">Cabin</div>
+          <div class="event-title"><a href="https://www.flamcamping.no" target="_blank">Flåm Camping</a></div>
+          <div class="event-note">Based on 5 people per cabin</div>
+        </div>
+        <span class="event-cost">£25</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAY 3 -->
+  <div class="day">
+    <div class="day-header">
+      <span class="day-number">3</span>
+      <div class="day-info">
+        <h2>Into the Mountains</h2>
+        <p class="day-date">Saturday 27th June</p>
+      </div>
+    </div>
+    <div class="events">
+      <div class="event">
+        <span class="event-time">11:45</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <div class="event-body">
+          <div class="event-label">Train</div>
+          <div class="event-title"><a href="https://www.flamsbana.no" target="_blank">Flåmsbana Mountain Railway</a></div>
+          <div class="event-note">One of the world's steepest railways</div>
+        </div>
+        <span class="event-cost">£45</span>
+      </div>
+      <div class="event highlight">
+        <span class="event-time">12:00</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <div class="event-body">
+          <div class="event-label">Activity <span class="optional-tag">Optional</span></div>
+          <div class="event-title"><a href="https://www.flaamzipline.no" target="_blank">Flåm Zipline</a></div>
+          <div class="event-note">Dan in a tutu, flying free.</div>
+        </div>
+        <span class="event-cost">£64</span>
+      </div>
+      <div class="event">
+        <span class="event-time">14:00</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <div class="event-body">
+          <div class="event-label">Hike <span class="optional-tag">Optional</span></div>
+          <div class="event-title">Myrdal → Hallingskleid</div>
+          <div class="event-note">15k mountain hike. Train available if not hiking.</div>
+        </div>
+        <span class="event-cost free">Free</span>
+      </div>
+      <div class="event highlight">
+        <span class="event-time">18:00</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <div class="event-body">
+          <div class="event-label">Overnight</div>
+          <div class="event-title"><a href="https://www.dnt.no/hyttene/hallingskarvet/" target="_blank">DNT Mountain Hut</a></div>
+          <div class="event-note">Communal supper, overnight stay in the mountains.</div>
+        </div>
+        <span class="event-cost">£35</span>
+      </div>
+      <div class="event">
+        <span class="event-time">09:53</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <div class="event-body">
+          <div class="event-label">Train</div>
+          <div class="event-title">Hallingskleid → Finse</div>
+        </div>
+        <span class="event-cost">£7</span>
+      </div>
+      <div class="event highlight">
+        <span class="event-time">10:29</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <div class="event-body">
+          <div class="event-label">Lunch <span class="optional-tag">Optional</span></div>
+          <div class="event-title"><a href="https://www.finse1222.no" target="_blank">Finse 1222</a></div>
+          <div class="event-note">Beers and lunch at the hotel where they filmed the ice planet Hoth in The Empire Strikes Back.</div>
+        </div>
+        <span class="event-cost tbc">TBC</span>
+      </div>
+      <div class="event">
+        <span class="event-time">14:08</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <div class="event-body">
+          <div class="event-label">Train</div>
+          <div class="event-title">Finse → Bergen</div>
+          <div class="event-note">Arrives 16:54</div>
+        </div>
+        <span class="event-cost">£37</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAY 4 -->
+  <div class="day">
+    <div class="day-header">
+      <span class="day-number">4</span>
+      <div class="day-info">
+        <h2>Home</h2>
+        <p class="day-date">Sunday 28th June</p>
+      </div>
+    </div>
+    <div class="events">
+      <div class="event">
+        <span class="event-time">17:00</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <div class="event-body">
+          <div class="event-label">Transit</div>
+          <div class="event-title">Tram to Bergen Airport</div>
+        </div>
+        <span class="event-cost">£3</span>
+      </div>
+      <div class="event">
+        <span class="event-time">19:05</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <div class="event-body">
+          <div class="event-label">Flight</div>
+          <div class="event-title">Bergen → Gatwick</div>
+          <div class="event-note">Lands 20:20. Home!</div>
+        </div>
+        <span class="event-cost free">—</span>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>DRAFT PLAN &nbsp;·&nbsp; SUBJECT TO CHANGE &nbsp;·&nbsp; OPTIONAL ITEMS MARKED</p>
+    <p>FOOD &amp; DRINK EXCLUDED &nbsp;·&nbsp; BRING WHISKY</p>
+  </footer>
+
+</div>
+<script>
+  const map = L.map('map', {
+    center: [60.65, 6.5],
+    zoom: 8,
+    zoomControl: true,
+    scrollWheelZoom: false
+  });
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© OpenStreetMap, © CARTO',
+    maxZoom: 16
+  }).addTo(map);
+
+  function makeIcon(colour) {
+    return L.divIcon({
+      className: '',
+      html: `<div style="
+        width:12px;height:12px;border-radius:50%;
+        background:${colour};
+        border:2px solid #0d1b2a;
+        box-shadow:0 0 8px ${colour}88;
+      "></div>`,
+      iconSize: [12, 12],
+      iconAnchor: [6, 6],
+      popupAnchor: [0, -10]
+    });
+  }
+
+  const gold  = makeIcon('#c9a84c');
+  const blue  = makeIcon('#7a9bac');
+
+  const pois = [
+    { ll: [60.3913, 5.3221], icon: gold,  label: 'Base', title: 'Bergen',               day: 'Thu & Sun' },
+    { ll: [60.2938, 5.2219], icon: blue,  label: 'Airport', title: 'Bergen Airport',   day: 'Thu 25th / Sun 28th' },
+    { ll: [60.8608, 7.1118], icon: gold,  label: 'Fri', title: 'Flåm',                 day: 'Friday 26th' },
+    { ll: [60.8638, 7.1173], icon: gold,  label: 'Beer', title: 'Ægir BrewPub',        day: 'Friday 26th' },
+    { ll: [60.7423, 7.1275], icon: gold,  label: 'Activity', title: 'Flåm Zipline',    day: 'Saturday 27th' },
+    { ll: [60.7351, 7.1228], icon: blue,  label: 'Train', title: 'Myrdal Station',     day: 'Saturday 27th' },
+    { ll: [60.6837, 7.4970], icon: gold,  label: 'Overnight', title: 'DNT Mountain Hut (Hallingskleid)', day: 'Saturday 27th' },
+    { ll: [60.6017, 7.5033], icon: gold,  label: 'Lunch', title: 'Finse 1222',         day: 'Saturday 27th' },
+  ];
+
+  pois.forEach(p => {
+    L.marker(p.ll, { icon: p.icon })
+      .addTo(map)
+      .bindPopup(`<div class="popup-label">${p.label} · ${p.day}</div><div class="popup-title">${p.title}</div>`);
+  });
+
+  // Route line: Bergen → Flåm (ferry) → Myrdal → DNT Hut → Finse → Bergen
+  const route = [
+    [60.3913, 5.3221],
+    [60.8608, 7.1118],
+    [60.7351, 7.1228],
+    [60.6837, 7.4970],
+    [60.6017, 7.5033],
+    [60.3913, 5.3221]
+  ];
+
+  L.polyline(route, {
+    color: '#c9a84c',
+    weight: 1.5,
+    opacity: 0.4,
+    dashArray: '5, 6'
+  }).addTo(map);
+</script>
+</body>
+</html>
