@@ -567,6 +567,59 @@
     from { opacity: 0; transform: translateY(20px); }
     to   { opacity: 1; transform: translateY(0); }
   }
+
+  .req-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(122,155,172,0.5);
+    text-align: center;
+    margin-bottom: 14px;
+  }
+
+  .req-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    list-style: none;
+  }
+
+  .req-item {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+
+  .req-item.yes {
+    background: rgba(76,175,125,0.08);
+    border: 1px solid rgba(76,175,125,0.25);
+    color: #4caf7d;
+  }
+
+  .req-item.yes::before { content: '✓  '; }
+
+  .req-item.no {
+    background: rgba(200,16,46,0.08);
+    border: 1px solid rgba(200,16,46,0.2);
+    color: rgba(232,57,79,0.7);
+  }
+
+  .req-item.no::before { content: '✕  '; }
+
+  .req-item.ideal {
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.25);
+    color: rgba(201,168,76,0.8);
+  }
+
+  .req-item.ideal::before { content: '★  '; }
+
 </style>
 </head>
 <body>
@@ -583,13 +636,24 @@
       <span class="badge">~£148 per person</span>
       <span class="badge info">Food, drink &amp; banjos excluded</span>
     </div>
+    <div style="margin-top:24px;">
+      <p class="req-label">Dan's brief</p>
+      <ul class="req-list">
+        <li class="req-item yes">Adventure</li>
+        <li class="req-item yes">Drinking session</li>
+        <li class="req-item no">Sea</li>
+        <li class="req-item no">Mountains</li>
+        <li class="req-item no">Adrenaline</li>
+        <li class="req-item no">International</li>
+      </ul>
+    </div>
   </header>
 
   <div class="section-divider"></div>
 
   <div class="notice">
     <div class="notice-label">🍺 Food &amp; Drink</div>
-    <p>Food, drink and banjos are not included in the estimate. Pubs will be pulled into on the river. Supper in Ross on Saturday night.</p>
+    <p>Food, drink and banjos are not included in the estimate. Pubs all along the river. Pub supper in Ross on Saturday night.</p>
   </div>
 
   <!-- MAP -->
