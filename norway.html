@@ -939,10 +939,10 @@
       </div>
       <div class="event">
         <span class="event-time">09:53</span>
-        <div class="event-dot-col"><div class="event-dot gold"></div><div class="event-line"></div></div>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
         <span class="event-thumb-spacer"></span>
         <div class="event-body">
-          <div class="event-label gold">Train <span class="optional-tag">Optional</span></div>
+          <div class="event-label">Train <span class="optional-tag">Optional</span></div>
           <div class="event-title">Hallingskleid → Finse</div>
           <div class="event-note">Optional for those who don't need to depart straight to Bergen airport from the station at the hut.</div>
         </div>
@@ -1137,6 +1137,32 @@
     opacity: 0.5,
     dashArray: '6, 5',
   }).addTo(map).bindPopup('<div class="popup-label">Bergen Railway · Sat/Sun</div><div class="popup-title">Myrdal → Hallingskleid → Finse · across Hardangervidda</div>');
+
+  // --- BERGENSBANEN: Finse → Bergen (Sunday return) ---
+  const finseToBergen = [
+    [60.6017, 7.5033],  // Finse
+    [60.5700, 7.3500],  // Ustaoset
+    [60.5350, 7.2000],  // Haugastøl
+    [60.5100, 7.0500],  // Geilo
+    [60.5350, 6.8500],  // Ål
+    [60.5700, 6.6500],  // Gol
+    [60.6050, 6.4200],  // Flå
+    [60.6200, 6.2500],  // Nesbyen
+    [60.6400, 6.0800],  // Bromma
+    [60.6300, 5.8500],  // Voss
+    [60.5900, 5.7000],  // Bulken
+    [60.5400, 5.6000],  // Vaksdal
+    [60.4900, 5.5200],  // Dale
+    [60.4500, 5.4500],  // Arna
+    [60.3913, 5.3221],  // Bergen
+  ];
+
+  L.polyline(finseToBergen, {
+    color: '#7a9bac',
+    weight: 2,
+    opacity: 0.7,
+    dashArray: '6, 5',
+  }).addTo(map).bindPopup('<div class="popup-label">Bergensbanen · Sun 28th</div><div class="popup-title">Finse → Bergen · ~3 hrs across Hardangervidda</div>');
 
   // Modal
   function openModal(src, caption) {
