@@ -652,7 +652,7 @@
   /* ---- NAV ---- */
   .sitenav {
     position: fixed;
-    top: 0;
+    bottom: 0;
     left: 0;
     right: 0;
     z-index: 200;
@@ -663,7 +663,7 @@
     background: rgba(5,8,14,0.88);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
+    border-top: 1px solid rgba(255,255,255,0.06);
   }
 
   .sitenav-item {
@@ -671,10 +671,10 @@
     flex-direction: column;
     align-items: center;
     gap: 2px;
-    padding: 10px 20px;
+    padding: 12px 24px;
     text-decoration: none;
     font-family: 'DM Mono', monospace;
-    font-size: 0.58rem;
+    font-size: 0.65rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: rgba(255,255,255,0.35);
@@ -689,7 +689,7 @@
   }
 
   .sitenav-item .nav-emoji {
-    font-size: 1.1rem;
+    font-size: 1.4rem;
     line-height: 1;
     display: block;
   }
@@ -710,7 +710,7 @@
   .sitenav-item-spain.active  { border-bottom-color: #c23b22; color: #c23b22; }
   .sitenav-item-wye.active    { border-bottom-color: #c8102e; color: #c8102e; }
 
-  body { padding-top: 56px; }
+  body { padding-bottom: 72px; }
 
 </style>
 </head>
@@ -744,6 +744,11 @@
   </header>
 
   <div class="section-divider"></div>
+
+  <div class="notice" style="border-left-color:#c9a84c;margin-bottom:12px;">
+    <div class="notice-label">📝 Note</div>
+    <p>There is an option to travel back early to Bergen on the Sunday, or stay for an epic lunch (and evening flight home).</p>
+  </div>
 
   <div class="notice">
     <div class="notice-label">🥃 Food &amp; Drink</div>
