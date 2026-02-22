@@ -314,6 +314,65 @@
     to   { opacity: 0.82; transform: rotate(-4deg) scale(1); }
   }
 
+
+  /* ---- REQUIREMENTS ---- */
+  .requirements {
+    margin-bottom: 48px;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+
+  .req-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(122,155,172,0.5);
+    text-align: center;
+    margin-bottom: 14px;
+  }
+
+  .req-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    list-style: none;
+  }
+
+  .req-item {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+
+  .req-item.yes {
+    background: rgba(76,175,125,0.08);
+    border: 1px solid rgba(76,175,125,0.25);
+    color: #4caf7d;
+  }
+
+  .req-item.yes::before { content: '✓  '; }
+
+  .req-item.no {
+    background: rgba(200,16,46,0.08);
+    border: 1px solid rgba(200,16,46,0.2);
+    color: rgba(232,57,79,0.7);
+  }
+
+  .req-item.no::before { content: '✕  '; }
+
+  .req-item.ideal {
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.25);
+    color: rgba(201,168,76,0.8);
+  }
+
+  .req-item.ideal::before { content: '★  '; }
+
 </style>
 </head>
 <body>
@@ -327,6 +386,20 @@
     <p class="header-sub">26–28 June 2026 &nbsp;·&nbsp; Two options &nbsp;·&nbsp; One legend</p>
     <div class="divider"></div>
   </header>
+
+  <div class="requirements">
+    <p class="req-label">Dan's brief</p>
+    <ul class="req-list">
+      <li class="req-item yes">Sea</li>
+      <li class="req-item yes">Mountains</li>
+      <li class="req-item yes">Adventure</li>
+      <li class="req-item yes">Adrenaline</li>
+      <li class="req-item yes">Drinking session</li>
+      <li class="req-item no">Prostitutes</li>
+      <li class="req-item no">Asia</li>
+      <li class="req-item ideal">International</li>
+    </ul>
+  </div>
 
   <div class="cards">
 
