@@ -648,9 +648,74 @@
 
   .req-item.ideal::before { content: '★  '; }
 
+
+  /* ---- NAV ---- */
+  .sitenav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    padding: 0;
+    background: rgba(5,8,14,0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .sitenav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+    position: relative;
+  }
+
+  .sitenav-item:hover {
+    color: rgba(255,255,255,0.85);
+    background: rgba(255,255,255,0.04);
+  }
+
+  .sitenav-item .nav-emoji {
+    font-size: 1.1rem;
+    line-height: 1;
+    display: block;
+  }
+
+  .sitenav-item.active {
+    color: rgba(255,255,255,0.85);
+    cursor: default;
+  }
+
+  .sitenav-item-home   { border-bottom-color: transparent; }
+  .sitenav-item-home:hover   { border-bottom-color: #7a9bac; color: #7a9bac; }
+  .sitenav-item-norway:hover { border-bottom-color: #c9a84c; color: #c9a84c; }
+  .sitenav-item-spain:hover  { border-bottom-color: #c23b22; color: #c23b22; }
+  .sitenav-item-wye:hover    { border-bottom-color: #c8102e; color: #c8102e; }
+
+  .sitenav-item-home.active   { border-bottom-color: #7a9bac; color: #7a9bac; }
+  .sitenav-item-norway.active { border-bottom-color: #c9a84c; color: #c9a84c; }
+  .sitenav-item-spain.active  { border-bottom-color: #c23b22; color: #c23b22; }
+  .sitenav-item-wye.active    { border-bottom-color: #c8102e; color: #c8102e; }
+
+  body { padding-top: 56px; }
+
 </style>
 </head>
 <body>
+<nav class="sitenav" aria-label="Site navigation"><a class="sitenav-item sitenav-item-index" href="index.html"><span class="nav-emoji">🧔🏼‍♀️</span>Home</a><span class="sitenav-item sitenav-item-norway active" aria-current="page"><span class="nav-emoji">🇳🇴</span>Norway</span><a class="sitenav-item sitenav-item-spain" href="spain.html"><span class="nav-emoji">🇪🇸</span>España</a><a class="sitenav-item sitenav-item-wye" href="wye.html"><span class="nav-emoji">🏴󠁧󠁢󠁷󠁬󠁳󠁿</span>Wye</a></nav>
 <div class="container">
 
   <div class="rune-band">ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚺ ᚾ ᛁ ᛃ ᛇ ᛈ ᛉ ᛊ ᛏ ᛒ ᛖ ᛗ ᛚ ᛜ ᛞ ᛟ ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚺ ᚾ ᛁ ᛃ</div>
