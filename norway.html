@@ -173,8 +173,26 @@
     border-left: 3px solid var(--gold);
     border-radius: 4px;
     padding: 14px 18px;
-    margin-bottom: 48px;
+    margin-bottom: 20px;
     animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .changelog-list {
+    margin: 4px 0 0 0;
+    padding-left: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .changelog-list li {
+    font-size: 0.88rem;
+    color: var(--snow);
+    line-height: 1.5;
+  }
+
+  .changelog-list li strong {
+    color: #e8d9a0;
   }
 
   .notice-label {
@@ -726,7 +744,7 @@
     <p class="tagline">A Viking Saga &nbsp;·&nbsp; Four Days &nbsp;·&nbsp; One Legend</p>
     <p class="subtitle">25–28 June 2026 &nbsp;·&nbsp; Bergen → Flåm → Star Wars</p>
     <div class="badges">
-      <span class="badge">~£583 per person</span>
+      <span class="badge">~£704 per person</span>
       <span class="badge info">Food &amp; drink excluded</span>
     </div>
     <div style="margin-top:24px;">
@@ -744,6 +762,16 @@
   </header>
 
   <div class="section-divider"></div>
+
+  <div class="notice">
+    <div class="notice-label">📋 Change log</div>
+    <ul class="changelog-list">
+      <li><strong>Hotel</strong> — Changed to Comfort Hotel Bergen Airport (not city centre) due to late-night arrival. Includes breakfast. £69 → £65.</li>
+      <li><strong>Flights</strong> — Updated to £230. Edinburgh option noted: EDI → BGO direct (~£214).</li>
+      <li><strong>Flåm accommodation</strong> — Flåm Camping unavailable (midsummer + school holidays). Changed to Brekke Gård Hostel (£75). <strong>Has availability for 10 — priority to book ASAP.</strong></li>
+      <li><strong>DNT Mountain Hut</strong> — Updated from member price to non-member (guest) rate. £35 → £77.</li>
+    </ul>
+  </div>
 
   <div class="notice" style="border-left-color:#c9a84c;margin-bottom:12px;">
     <div class="notice-label">📝 Note</div>
@@ -777,10 +805,10 @@
         <span class="event-thumb-spacer"></span>
         <div class="event-body">
           <div class="event-label">Flight</div>
-          <div class="event-title">Gatwick → Bergen</div>
-          <div class="event-note">Lands 23:55</div>
+          <div class="event-title">London → Bergen</div>
+          <div class="event-note">Lands 23:55. Also viable: Edinburgh direct (EDI → BGO, ~£214).</div>
         </div>
-        <span class="event-cost">£197</span>
+        <span class="event-cost">£230</span>
       </div>
       <div class="event">
         <span class="event-time">00:30</span>
@@ -798,10 +826,10 @@
         <span class="event-thumb-spacer"></span>
         <div class="event-body">
           <div class="event-label">Hotel</div>
-          <div class="event-title">Check in, Bergen</div>
-          <div class="event-note">Twin rooms — based on two sharing</div>
+          <div class="event-title"><a href="https://www.strawberry.no/hotell/norge/bergen/comfort-hotel-bergen-airport/" target="_blank">Comfort Hotel Bergen Airport</a></div>
+          <div class="event-note">Twin rooms, includes breakfast. 06:45 tram to ferry terminal.</div>
         </div>
-        <span class="event-cost">£69</span>
+        <span class="event-cost">£65</span>
       </div>
     </div>
   </div>
@@ -861,11 +889,11 @@
           </div>
         </div>
         <div class="event-body">
-          <div class="event-label">Cabin</div>
-          <div class="event-title"><a href="https://www.flaam-camping.no/#cabins" target="_blank">Flåm Camping</a></div>
-          <div class="event-note">Based on 5 people per cabin. Hostel bunks and tent camping also an option.</div>
+          <div class="event-label">Hostel</div>
+          <div class="event-title"><a href="https://www.brekke-gard.no" target="_blank">Brekke Gård Hostel</a></div>
+          <div class="event-note">⚠️ Priority booking — has availability for 10. Flåm Camping unavailable due to midsummer/school holidays.</div>
         </div>
-        <span class="event-cost">£25</span>
+        <span class="event-cost">£75</span>
       </div>
     </div>
   </div>
@@ -940,7 +968,7 @@
           <div class="event-title"><a href="https://www.dnt.no/hyttene/hallingskarvet/" target="_blank">DNT Mountain Hut</a></div>
           <div class="event-note">Communal supper, whiskies, overnight stay high in the mountains.</div>
         </div>
-        <span class="event-cost">£35</span>
+        <span class="event-cost">£77</span>
       </div>
       <div class="event">
         <span class="event-time">09:53</span>
