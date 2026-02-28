@@ -1,0 +1,20 @@
+#,Day/Time,Item,Tags,Est. Cost (pp),Description,Link
+1a,Fri ~21:15,Caledonian Sleeper: London Euston → Glasgow Central,transit | train,£65,Board the overnight sleeper. Seats (not cabins); grab a beer in the dining car — the trip starts here. Arrives Glasgow ~07:00.,https://www.sleeper.scot
+1b,Fri ~18:00–19:00,✈️ ALT: Flight London → Glasgow,transit | flight,£40–£80,"easyJet/BA from Heathrow Gatwick or Luton to Glasgow International. ~1hr 20min. Requires onward transfer to Ardrossan — adds phaff, but works.",https://www.easyjet.com
+2,Sat ~07:00,Arrive Glasgow Central,transit,—,Wake up in Scotland (train) or transfer from airport (flight). Grab a deep fried Mars bar near the station.,—
+3,Sat ~08:30,ScotRail: Glasgow Central → Ardrossan Harbour,transit,~£6,~50 min train through Ayrshire timed to connect with the ferry.,https://www.scotrail.co.uk
+4,Sat ~09:40,CalMac Ferry: Ardrossan → Brodick,transit | sea,~£8,55-minute crossing on the Firth of Clyde. First proper hit of sea air — stags properly started.,https://www.calmac.co.uk
+5,Sat ~11:00,Lunch in Brodick,food,~£12,First meal on the island. The Brodick Bar does solid pub grub. Fuel up — there's a big hill ahead.,—
+6,Sat ~12:30,Goatfell Summit Hike,activity | mountains | adventure,Free,Arran's highest peak at 874m. A 4–5hr return from Brodick. Stunning views to Ireland and the Highlands on a clear day. Trail starts a short walk from the village.,https://www.nts.org.uk/visit/places/goatfell
+7,Sat ~17:30,Post-hike drinks: Brodick,activity | drinking,~£15–£20,Well earned. The Brodick Bar or Douglas Hotel. Keep an eye on the clock — bus leaves at 19:10.,—
+8,Sat 19:10,Bus 324: Brodick → Lochranza,transit,~£3–£4,Last bus of the day on this route. ~40 mins of coastal scenery. Arrives Lochranza ~19:53. Don't miss it.,https://www.stagecoachbus.com
+9,Sat ~20:00,Check in: Lochranza Youth Hostel,base | accommodation,£30.25/night (inc. breakfast),Drop bags shower change. Book the whole dorm for group privacy. Breakfast included.,https://www.hostellingscotland.org.uk/inspiration/view-all-hostels/
+10,Sat ~21:00,Evening at the Lochranza Hotel,activity | drinking,~£20–£30,Two-minute walk from the hostel. Local local atmosphere good whisky selection and views over the castle and loch. A proper island pub night.,https://www.lcilochranza.co.uk/bar/
+11,Sun ~09:00,Breakfast at Lochranza Youth Hostel,food,Included,Hostel breakfast included in your £30.25. Fuel up before the morning activity.,—
+12,Sun ~10:30,Bus 324: Lochranza → Brodick,transit,~£3–£4,Head back down for the morning activity. Departs Lochranza ~10:30 arrives Brodick ~11:10.,https://www.stagecoachbus.com
+13,Sun ~11:30,Canyoning or Sea Kayaking,activity | sea | adventure,£65,Arran Adventure Co. runs both. Coasteering — jumping off sea rocks into the Firth — is perfect post-night-out energy.,https://www.arranadventure.com
+15,Sun 15:00,Arran Distillery Tour & Tasting,activity | drinking | surprise,~£15–£20,Right in Brodick. A guided tour and whisky tasting — the perfect send-off before the ferry. Book in advance.,https://www.arranwhisky.com
+16,Sun ~17:00,CalMac Ferry: Brodick → Ardrossan,transit | sea,~£8,The island disappearing behind you — always a good sign you picked the right place.,https://www.calmac.co.uk
+17,Sun ~18:00,ScotRail: Ardrossan → Glasgow Central,transit,~£6,Quick hop back to Glasgow.,https://www.scotrail.co.uk
+18a,Sun ~19:30,Avanti West Coast: Glasgow Central → London Euston,transit | train,£65,~4.5hr return. Arrive London ~23:30. Book advance tickets.,https://www.avantitrain.co.uk
+18b,Sun ~20:00–21:00,✈️ ALT: Flight Glasgow → London,transit | flight,£40–£80,easyJet/BA from Glasgow GLA back to London. ~1hr 20min. Airport overhead adds ~2hrs vs the train.,https://www.easyjet.com
