@@ -1,0 +1,1159 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏴󠁧󠁢󠁳󠁣󠁴󠁿</text></svg>">
+<title>Dan's Stag – Isle of Arran 🏴󠁧󠁢󠁳󠁣󠁴󠁿</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  :root {
+    --navy:     #0d1b2a;
+    --highland: #1a2e20;
+    --snow:     #f0f4f7;
+    --amber:    #c9842c;
+    --heather:  #7d6b8c;
+    --white:    #ffffff;
+    --green:    #4caf7d;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--navy);
+    color: var(--snow);
+    font-size: 21px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 80%, rgba(26,46,32,0.65) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 20%, rgba(201,132,44,0.08) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 48px;
+    animation: fadeDown 0.8s ease both;
+  }
+
+  .tagline {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-top: 10px;
+    opacity: 0.85;
+  }
+
+  .ogham-band {
+    width: 100%;
+    text-align: center;
+    font-size: 1rem;
+    letter-spacing: 0.5rem;
+    color: var(--amber);
+    opacity: 0.3;
+    user-select: none;
+    padding: 12px 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .flag { font-size: 48px; display: block; margin-bottom: 16px; }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 6vw, 3.6rem);
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  header h1 em { font-style: italic; color: var(--amber); }
+
+  .subtitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: var(--heather);
+    text-transform: uppercase;
+    margin-top: 12px;
+  }
+
+  .badges {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+
+  .badge {
+    display: inline-block;
+    background: rgba(201,132,44,0.12);
+    border: 1px solid rgba(201,132,44,0.3);
+    border-radius: 40px;
+    padding: 8px 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.88rem;
+    color: var(--amber);
+    letter-spacing: 0.1em;
+  }
+
+  .badge.info {
+    background: rgba(125,107,140,0.1);
+    border-color: rgba(125,107,140,0.25);
+    color: var(--heather);
+    font-size: 0.88rem;
+  }
+
+  .notice {
+    background: rgba(201,132,44,0.06);
+    border: 1px solid rgba(201,132,44,0.2);
+    border-left: 3px solid var(--amber);
+    border-radius: 4px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .notice-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 6px;
+  }
+
+  .notice p {
+    font-size: 0.95rem;
+    color: var(--snow);
+    line-height: 1.5;
+  }
+
+  .notice p em {
+    color: var(--amber);
+    font-style: normal;
+    font-weight: 500;
+  }
+
+  .changelog-list {
+    margin: 4px 0 0 0;
+    padding-left: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .changelog-list li {
+    font-size: 0.88rem;
+    color: var(--snow);
+    line-height: 1.5;
+  }
+
+  .changelog-list li strong {
+    color: #e8cfa0;
+  }
+
+  .section-divider {
+    width: 40px;
+    height: 1px;
+    background: rgba(201,132,44,0.3);
+    margin: 0 auto 48px;
+  }
+
+  .day {
+    margin-bottom: 48px;
+    animation: fadeUp 0.7s ease both;
+  }
+
+  .day:nth-child(3) { animation-delay: 0.15s; }
+  .day:nth-child(4) { animation-delay: 0.25s; }
+  .day:nth-child(5) { animation-delay: 0.35s; }
+  .day:nth-child(6) { animation-delay: 0.45s; }
+
+  .day-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(200,221,232,0.12);
+  }
+
+  .day-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: rgba(201,132,44,0.2);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .day-info h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  .day-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--heather);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .events { display: flex; flex-direction: column; }
+
+  .event {
+    display: grid;
+    grid-template-columns: 56px 28px 52px 1fr auto;
+    gap: 0 12px;
+    align-items: start;
+    padding: 12px 0;
+  }
+
+  .event-time {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--heather);
+    padding-top: 3px;
+    text-align: right;
+    letter-spacing: 0.05em;
+  }
+
+  .event-dot-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .event-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--highland);
+    border: 2px solid var(--heather);
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .event.highlight .event-dot {
+    background: var(--amber);
+    border-color: var(--amber);
+    box-shadow: 0 0 10px rgba(201,132,44,0.4);
+  }
+
+  .event-dot.amber {
+    background: var(--amber);
+    border-color: var(--amber);
+    box-shadow: 0 0 10px rgba(201,132,44,0.4);
+  }
+
+  .event-label.amber { color: var(--amber); }
+
+  .event-line {
+    width: 1px;
+    flex: 1;
+    background: rgba(200,221,232,0.1);
+    margin-top: 4px;
+    min-height: 20px;
+  }
+
+  .event:last-child .event-line { display: none; }
+
+  .event-label {
+    font-size: 0.72rem;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--heather);
+    margin-bottom: 2px;
+  }
+
+  .event.highlight .event-label { color: var(--amber); }
+
+  .event-title {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--snow);
+    line-height: 1.3;
+  }
+
+  .event-note {
+    font-size: 0.88rem;
+    color: var(--heather);
+    margin-top: 3px;
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  .event-title a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(201,132,44,0.3);
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .event-title a:hover {
+    color: var(--amber);
+    border-bottom-color: var(--amber);
+  }
+
+  .optional-tag {
+    display: inline-block;
+    background: rgba(125,107,140,0.15);
+    border: 1px solid rgba(125,107,140,0.25);
+    border-radius: 3px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    color: var(--heather);
+    text-transform: uppercase;
+    padding: 1px 5px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  .event-cost {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--green);
+    padding-top: 4px;
+    white-space: nowrap;
+    text-align: right;
+    min-width: 40px;
+  }
+
+  .event-cost.free { color: rgba(125,107,140,0.5); }
+  .event-cost.tbc  { color: rgba(125,107,140,0.5); font-style: italic; }
+
+  footer {
+    margin-top: 60px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(200,221,232,0.1);
+    text-align: center;
+  }
+
+  footer p {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: rgba(125,107,140,0.4);
+    letter-spacing: 0.1em;
+    line-height: 2;
+  }
+
+  /* Map */
+  .map-section {
+    margin-bottom: 48px;
+    animation: fadeUp 0.7s ease both;
+  }
+
+  .map-section h3 {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--heather);
+    margin-bottom: 12px;
+  }
+
+  #map {
+    width: 100%;
+    height: 380px;
+    border-radius: 6px;
+    border: 1px solid rgba(200,221,232,0.1);
+    overflow: hidden;
+  }
+
+  .leaflet-popup-content-wrapper {
+    background: #0d1b2a;
+    border: 1px solid rgba(201,132,44,0.3);
+    border-radius: 4px;
+    color: #f0f4f7;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+
+  .leaflet-popup-tip { background: #0d1b2a; }
+
+  .leaflet-popup-content {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    line-height: 1.4;
+    margin: 10px 14px;
+  }
+
+  .popup-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #c9842c;
+    margin-bottom: 3px;
+  }
+
+  .popup-title { font-weight: 500; color: #f0f4f7; }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .event-thumb-spacer {
+    display: block;
+    width: 44px;
+  }
+
+  .event-thumb-wrap {
+    position: relative;
+    width: 44px;
+    height: 54px;
+    flex-shrink: 0;
+    cursor: pointer;
+    border-radius: 3px;
+    overflow: hidden;
+    border: 1.5px solid rgba(201,132,44,0.45);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+  }
+
+  .event-thumb-wrap:hover,
+  .event-thumb-wrap:focus {
+    border-color: var(--amber);
+    box-shadow: 0 0 14px rgba(201,132,44,0.55);
+    transform: scale(1.05);
+    outline: none;
+  }
+
+  .event-thumb-wrap:active { transform: scale(0.97); }
+
+  .event-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+  }
+
+  .event-thumb-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(13,27,42,0.45);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    opacity: 1;
+    transition: background 0.2s;
+  }
+
+  .event-thumb-wrap:hover .event-thumb-overlay { background: rgba(13,27,42,0.2); }
+
+  .event-thumb-icon {
+    font-size: 14px;
+    line-height: 1;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.6));
+  }
+
+  .event-thumb-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.38rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    line-height: 1;
+  }
+
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    cursor: pointer;
+    animation: modalFadeIn 0.2s ease;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  @keyframes modalFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .modal-inner {
+    position: relative;
+    max-width: 860px;
+    width: 100%;
+    cursor: default;
+    animation: modalSlideUp 0.25s ease;
+  }
+
+  @keyframes modalSlideUp {
+    from { transform: translateY(16px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  .modal-inner img {
+    width: 100%;
+    border-radius: 6px;
+    display: block;
+    border: 1px solid rgba(201,132,44,0.25);
+  }
+
+  .modal-caption {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-top: 10px;
+    text-align: center;
+    opacity: 0.8;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: -14px;
+    right: -14px;
+    width: 32px;
+    height: 32px;
+    background: var(--navy);
+    border: 1px solid rgba(201,132,44,0.4);
+    border-radius: 50%;
+    color: var(--amber);
+    font-size: 1rem;
+    line-height: 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .modal-close:hover { background: var(--highland); }
+
+  .req-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--heather);
+    text-align: center;
+    margin-bottom: 14px;
+  }
+
+  .req-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    list-style: none;
+  }
+
+  .req-item {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+
+  .req-item.yes {
+    background: rgba(76,175,125,0.08);
+    border: 1px solid rgba(76,175,125,0.25);
+    color: #4caf7d;
+  }
+
+  .req-item.yes::before { content: '✓  '; }
+
+  .req-item.no {
+    background: rgba(201,132,44,0.08);
+    border: 1px solid rgba(201,132,44,0.2);
+    color: rgba(232,57,79,0.7);
+  }
+
+  .req-item.no::before { content: '✕  '; }
+
+  .req-item.ideal {
+    background: rgba(201,132,44,0.08);
+    border: 1px solid rgba(201,132,44,0.25);
+    color: rgba(201,132,44,0.8);
+  }
+
+  .req-item.ideal::before { content: '★  '; }
+
+  /* NAV */
+  .sitenav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    padding: 0;
+    background: rgba(5,8,14,0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .sitenav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 12px 20px;
+    text-decoration: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+    position: relative;
+  }
+
+  .sitenav-item:hover {
+    color: rgba(255,255,255,0.85);
+    background: rgba(255,255,255,0.04);
+  }
+
+  .sitenav-item .nav-emoji {
+    font-size: 1.4rem;
+    line-height: 1;
+    display: block;
+  }
+
+  .sitenav-item.active {
+    color: rgba(255,255,255,0.85);
+    cursor: default;
+  }
+
+  .sitenav-item-home:hover    { border-bottom-color: #7a9bac; color: #7a9bac; }
+  .sitenav-item-arran:hover   { border-bottom-color: #c9842c; color: #c9842c; }
+  .sitenav-item-norway:hover  { border-bottom-color: #c9a84c; color: #c9a84c; }
+  .sitenav-item-spain:hover   { border-bottom-color: #c23b22; color: #c23b22; }
+  .sitenav-item-wye:hover     { border-bottom-color: #c8102e; color: #c8102e; }
+
+  .sitenav-item-home.active    { border-bottom-color: #7a9bac; color: #7a9bac; }
+  .sitenav-item-arran.active   { border-bottom-color: #c9842c; color: #c9842c; }
+  .sitenav-item-norway.active  { border-bottom-color: #c9a84c; color: #c9a84c; }
+  .sitenav-item-spain.active   { border-bottom-color: #c23b22; color: #c23b22; }
+  .sitenav-item-wye.active     { border-bottom-color: #c8102e; color: #c8102e; }
+
+  body { padding-bottom: 72px; }
+
+</style>
+</head>
+<body>
+
+<nav class="sitenav" aria-label="Site navigation">
+  <a class="sitenav-item sitenav-item-home" href="index.html"><span class="nav-emoji">🧔🏼‍♀️</span>Home</a>
+  <span class="sitenav-item sitenav-item-arran active" aria-current="page"><span class="nav-emoji">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>Arran</span>
+  <a class="sitenav-item sitenav-item-norway" href="norway.html"><span class="nav-emoji">🇳🇴</span>Norway</a>
+  <a class="sitenav-item sitenav-item-spain" href="spain.html"><span class="nav-emoji">🇪🇸</span>España</a>
+  <a class="sitenav-item sitenav-item-wye" href="wye.html"><span class="nav-emoji">🏴󠁧󠁢󠁷󠁬󠁳󠁿</span>Wye</a>
+</nav>
+
+<div class="container">
+
+  <div class="ogham-band">ᚁ ᚂ ᚃ ᚄ ᚅ ᚆ ᚇ ᚈ ᚉ ᚊ ᚋ ᚌ ᚍ ᚎ ᚏ ᚐ ᚑ ᚒ ᚓ ᚔ ᚕ ᚖ ᚗ ᚘ ᚁ ᚂ ᚃ ᚄ ᚅ ᚆ ᚇ ᚈ</div>
+
+  <header>
+    <span class="flag">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>
+    <h1>Isle of <em>Arran</em></h1>
+    <p class="subtitle">Dan's Stag · Scotland's Miniature</p>
+    <p class="tagline">Clyde · Highland · Whisky · Summit</p>
+    <div class="badges">
+      <span class="badge">🚂 Sleeper Fri Night</span>
+      <span class="badge">⛰ 874m Summit</span>
+      <span class="badge">🥃 Distillery</span>
+      <span class="badge info">Fri → Sun</span>
+      <span class="badge info">~£270 pp</span>
+    </div>
+  </header>
+
+  <div class="section-divider"></div>
+
+  <div class="notice">
+    <div class="notice-label">Book Early</div>
+    <p>Book the <em>Caledonian Sleeper</em> as soon as dates are set — seats sell out in summer. Reserve the entire hostel dorm at <em>Lochranza</em> for group privacy. <em>Arran Adventure Co.</em> canyoning/kayaking and the distillery tour both benefit from advance booking.</p>
+  </div>
+
+  <!-- ===== DAY 0: FRIDAY TRAVEL ===== -->
+  <div class="day">
+    <div class="day-header">
+      <span class="day-number">0</span>
+      <div class="day-info">
+        <h2>The Night Train</h2>
+        <p class="day-date">Friday Evening</p>
+      </div>
+    </div>
+    <div class="events">
+
+      <div class="event highlight">
+        <span class="event-time">21:15</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <span class="event-thumb-spacer"></span>
+        <div class="event-body">
+          <div class="event-label">Train · Recommended</div>
+          <div class="event-title"><a href="https://www.sleeper.scot" target="_blank">Caledonian Sleeper: London Euston → Glasgow Central</a></div>
+          <div class="event-note">Board the overnight sleeper. Seats (not cabins); grab a beer in the dining car — the trip starts here. Arrives Glasgow ~07:00.</div>
+        </div>
+        <span class="event-cost">£65</span>
+      </div>
+
+      <div class="event">
+        <span class="event-time">18:00</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <span class="event-thumb-spacer"></span>
+        <div class="event-body">
+          <div class="event-label">Flight · Alt</div>
+          <div class="event-title">✈️ <a href="https://www.easyjet.com" target="_blank">Flight London → Glasgow</a> <span class="optional-tag">alt</span></div>
+          <div class="event-note">easyJet/BA from Heathrow, Gatwick or Luton to Glasgow International. ~1hr 20min. Requires onward transfer to Ardrossan — adds faff, but works.</div>
+        </div>
+        <span class="event-cost tbc">£40–80</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== DAY 1: SATURDAY ===== -->
+  <div class="day">
+    <div class="day-header">
+      <span class="day-number">1</span>
+      <div class="day-info">
+        <h2>The Island</h2>
+        <p class="day-date">Saturday</p>
+      </div>
+    </div>
+    <div class="events">
+
+      <div class="event">
+        <span class="event-time">07:00</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <span class="event-thumb-spacer"></span>
+        <div class="event-body">
+          <div class="event-label">Arrive</div>
+          <div class="event-title">Glasgow Central</div>
+          <div class="event-note">Wake up in Scotland (train) or transfer from airport (flight). Grab a deep-fried Mars bar near the station.</div>
+        </div>
+        <span class="event-cost free">—</span>
+      </div>
+
+      <div class="event">
+        <span class="event-time">08:30</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <span class="event-thumb-spacer"></span>
+        <div class="event-body">
+          <div class="event-label">Train</div>
+          <div class="event-title"><a href="https://www.scotrail.co.uk" target="_blank">ScotRail: Glasgow Central → Ardrossan Harbour</a></div>
+          <div class="event-note">~50 min through Ayrshire, timed to connect with the ferry.</div>
+        </div>
+        <span class="event-cost">~£6</span>
+      </div>
+
+      <div class="event highlight">
+        <span class="event-time">09:40</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <span class="event-thumb-spacer"></span>
+        <div class="event-body">
+          <div class="event-label">Ferry · CalMac</div>
+          <div class="event-title"><a href="https://www.calmac.co.uk" target="_blank">CalMac: Ardrossan → Brodick</a></div>
+          <div class="event-note">55-minute crossing on the Firth of Clyde. First proper hit of sea air — stag properly started.</div>
+        </div>
+        <span class="event-cost">~£8</span>
+      </div>
+
+      <div class="event">
+        <span class="event-time">11:00</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <span class="event-thumb-spacer"></span>
+        <div class="event-body">
+          <div class="event-label">Food</div>
+          <div class="event-title">Lunch in Brodick</div>
+          <div class="event-note">First meal on the island. The Brodick Bar does solid pub grub. Fuel up — there's a big hill ahead.</div>
+        </div>
+        <span class="event-cost">~£12</span>
+      </div>
+
+      <div class="event highlight">
+        <span class="event-time">12:30</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <span class="event-thumb-spacer"></span>
+        <div class="event-body">
+          <div class="event-label">Activity · Summit</div>
+          <div class="event-title"><a href="https://www.nts.org.uk/visit/places/goatfell" target="_blank">Goatfell Summit Hike</a></div>
+          <div class="event-note">Arran's highest peak at 874m. A 4–5 hr return from Brodick. Stunning views to Ireland and the Highlands on a clear day. Trail starts a short walk from the village.</div>
+        </div>
+        <span class="event-cost free">Free</span>
+      </div>
+
+      <div class="event">
+        <span class="event-time">17:30</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <span class="event-thumb-spacer"></span>
+        <div class="event-body">
+          <div class="event-label">Drinks</div>
+          <div class="event-title">Post-hike pints: Brodick</div>
+          <div class="event-note">Well earned. The Brodick Bar or Douglas Hotel. Keep an eye on the clock — bus leaves at 19:10.</div>
+        </div>
+        <span class="event-cost">~£15–20</span>
+      </div>
+
+      <div class="event">
+        <span class="event-time">19:10</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <span class="event-thumb-spacer"></span>
+        <div class="event-body">
+          <div class="event-label">Bus · Last of the Day</div>
+          <div class="event-title"><a href="https://www.stagecoachbus.com" target="_blank">Bus 324: Brodick → Lochranza</a></div>
+          <div class="event-note">~40 mins of coastal scenery. Arrives Lochranza ~19:53. Last bus on this route — don't miss it.</div>
+        </div>
+        <span class="event-cost">~£3–4</span>
+      </div>
+
+      <div class="event">
+        <span class="event-time">20:00</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <span class="event-thumb-spacer"></span>
+        <div class="event-body">
+          <div class="event-label">Base · Accommodation</div>
+          <div class="event-title"><a href="https://www.hostellingscotland.org.uk/inspiration/view-all-hostels/" target="_blank">Lochranza Youth Hostel</a></div>
+          <div class="event-note">Drop bags, shower, change. Book the whole dorm for group privacy. Breakfast included.</div>
+        </div>
+        <span class="event-cost">£30.25</span>
+      </div>
+
+      <div class="event highlight">
+        <span class="event-time">21:00</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <span class="event-thumb-spacer"></span>
+        <div class="event-body">
+          <div class="event-label">Drinks · Evening</div>
+          <div class="event-title"><a href="https://www.lcilochranza.co.uk/bar/" target="_blank">Lochranza Hotel Bar</a></div>
+          <div class="event-note">Two-minute walk from the hostel. Local atmosphere, good whisky selection, and views over the castle and loch. A proper island pub night.</div>
+        </div>
+        <span class="event-cost">~£20–30</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== DAY 2: SUNDAY ===== -->
+  <div class="day">
+    <div class="day-header">
+      <span class="day-number">2</span>
+      <div class="day-info">
+        <h2>The Send-Off</h2>
+        <p class="day-date">Sunday</p>
+      </div>
+    </div>
+    <div class="events">
+
+      <div class="event">
+        <span class="event-time">09:00</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <span class="event-thumb-spacer"></span>
+        <div class="event-body">
+          <div class="event-label">Food · Included</div>
+          <div class="event-title">Breakfast at Lochranza Youth Hostel</div>
+          <div class="event-note">Included in your £30.25. Fuel up before the morning activity.</div>
+        </div>
+        <span class="event-cost free">Incl.</span>
+      </div>
+
+      <div class="event">
+        <span class="event-time">10:30</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <span class="event-thumb-spacer"></span>
+        <div class="event-body">
+          <div class="event-label">Bus</div>
+          <div class="event-title"><a href="https://www.stagecoachbus.com" target="_blank">Bus 324: Lochranza → Brodick</a></div>
+          <div class="event-note">Head back down for the morning activity. Departs ~10:30, arrives Brodick ~11:10.</div>
+        </div>
+        <span class="event-cost">~£3–4</span>
+      </div>
+
+      <div class="event highlight">
+        <span class="event-time">11:30</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <span class="event-thumb-spacer"></span>
+        <div class="event-body">
+          <div class="event-label">Activity · Adventure</div>
+          <div class="event-title"><a href="https://www.arranadventure.com" target="_blank">Canyoning or Sea Kayaking</a></div>
+          <div class="event-note">Arran Adventure Co. runs both. Coasteering — jumping off sea rocks into the Firth of Clyde — is perfect post-night-out energy. Book in advance.</div>
+        </div>
+        <span class="event-cost">£65</span>
+      </div>
+
+      <div class="event highlight">
+        <span class="event-time">15:00</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <span class="event-thumb-spacer"></span>
+        <div class="event-body">
+          <div class="event-label amber">Activity · 🥃 Surprise</div>
+          <div class="event-title"><a href="https://www.arranwhisky.com" target="_blank">Arran Distillery Tour & Tasting</a></div>
+          <div class="event-note">A guided tour and whisky tasting — the perfect send-off before the ferry. Book in advance.</div>
+        </div>
+        <span class="event-cost">~£15–20</span>
+      </div>
+
+      <div class="event highlight">
+        <span class="event-time">17:00</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <span class="event-thumb-spacer"></span>
+        <div class="event-body">
+          <div class="event-label">Ferry · CalMac</div>
+          <div class="event-title"><a href="https://www.calmac.co.uk" target="_blank">CalMac: Brodick → Ardrossan</a></div>
+          <div class="event-note">The island disappearing behind you — always a good sign you picked the right place.</div>
+        </div>
+        <span class="event-cost">~£8</span>
+      </div>
+
+      <div class="event">
+        <span class="event-time">18:00</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <span class="event-thumb-spacer"></span>
+        <div class="event-body">
+          <div class="event-label">Train</div>
+          <div class="event-title"><a href="https://www.scotrail.co.uk" target="_blank">ScotRail: Ardrossan → Glasgow Central</a></div>
+          <div class="event-note">Quick hop back to the city.</div>
+        </div>
+        <span class="event-cost">~£6</span>
+      </div>
+
+      <div class="event">
+        <span class="event-time">19:30</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <span class="event-thumb-spacer"></span>
+        <div class="event-body">
+          <div class="event-label">Train · Recommended</div>
+          <div class="event-title"><a href="https://www.avantitrain.co.uk" target="_blank">Avanti West Coast: Glasgow Central → London Euston</a></div>
+          <div class="event-note">~4.5 hr return. Arrive London ~23:30. Book advance tickets.</div>
+        </div>
+        <span class="event-cost">£65</span>
+      </div>
+
+      <div class="event">
+        <span class="event-time">20:00</span>
+        <div class="event-dot-col"><div class="event-dot"></div><div class="event-line"></div></div>
+        <span class="event-thumb-spacer"></span>
+        <div class="event-body">
+          <div class="event-label">Flight · Alt</div>
+          <div class="event-title">✈️ <a href="https://www.easyjet.com" target="_blank">Flight Glasgow → London</a> <span class="optional-tag">alt</span></div>
+          <div class="event-note">easyJet/BA from Glasgow GLA back to London. ~1hr 20min. Airport overhead adds ~2hrs vs the train.</div>
+        </div>
+        <span class="event-cost tbc">£40–80</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== MAP ===== -->
+  <div class="map-section">
+    <h3>Route Map</h3>
+    <div id="map"></div>
+  </div>
+
+  <!-- ===== WHAT YOU NEED ===== -->
+  <div style="margin-bottom: 48px; animation: fadeUp 0.7s ease both;">
+    <p class="req-label">What You Need</p>
+    <ul class="req-list">
+      <li class="req-item yes">Passport / ID</li>
+      <li class="req-item yes">Sturdy walking boots</li>
+      <li class="req-item yes">Waterproof jacket</li>
+      <li class="req-item yes">Rail card (if applicable)</li>
+      <li class="req-item yes">Cash for buses on island</li>
+      <li class="req-item ideal">Whisky tolerance</li>
+      <li class="req-item ideal">Clear weather (Goatfell)</li>
+      <li class="req-item no">Car (not needed)</li>
+    </ul>
+  </div>
+
+  <footer>
+    <p>Isle of Arran · Dan's Stag</p>
+    <p>Scotland's Miniature · Clyde · Highlands · Whisky</p>
+    <p>Cuileann · Goatfell · Lochranza · CalMac</p>
+  </footer>
+
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="imgModal" onclick="closeModal(event)">
+  <div class="modal-inner">
+    <div class="modal-close" onclick="document.getElementById('imgModal').classList.remove('open')">✕</div>
+    <img id="modalImg" src="" alt="">
+    <p class="modal-caption" id="modalCaption"></p>
+  </div>
+</div>
+
+<script>
+  // Modal
+  function openModal(src, caption) {
+    document.getElementById('modalImg').src = src;
+    document.getElementById('modalCaption').textContent = caption;
+    document.getElementById('imgModal').classList.add('open');
+  }
+  function closeModal(e) {
+    if (e.target === document.getElementById('imgModal')) {
+      document.getElementById('imgModal').classList.remove('open');
+    }
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') document.getElementById('imgModal').classList.remove('open');
+  });
+
+  // Map
+  const map = L.map('map', {
+    center: [55.63, -5.22],
+    zoom: 10,
+    zoomControl: true,
+    scrollWheelZoom: false,
+  });
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19,
+  }).addTo(map);
+
+  // Custom marker icon
+  function makeIcon(emoji, label) {
+    return L.divIcon({
+      html: '<div style="font-size:18px;line-height:1;filter:drop-shadow(0 1px 3px rgba(0,0,0,0.7))">' + emoji + '</div>',
+      className: '',
+      iconSize: [24, 24],
+      iconAnchor: [12, 12],
+      popupAnchor: [0, -14],
+    });
+  }
+
+  // Markers
+  L.marker([55.8581, -4.2583], { icon: makeIcon('🚉') })
+    .addTo(map)
+    .bindPopup('<div class="popup-label">Train · Sat 07:00</div><div class="popup-title">Glasgow Central</div>');
+
+  L.marker([55.6417, -4.8167], { icon: makeIcon('⛴️') })
+    .addTo(map)
+    .bindPopup('<div class="popup-label">Ferry · CalMac · Sat 09:40</div><div class="popup-title">Ardrossan Harbour → Brodick</div>');
+
+  L.marker([55.5764, -5.1461], { icon: makeIcon('🍺') })
+    .addTo(map)
+    .bindPopup('<div class="popup-label">Arrival · Sat ~10:35</div><div class="popup-title">Brodick · Lunch, Hike Trailhead & Evening Bus</div>');
+
+  L.marker([55.6267, -5.1983], { icon: makeIcon('⛰️') })
+    .addTo(map)
+    .bindPopup('<div class="popup-label">Activity · Sat ~14:30</div><div class="popup-title">Goatfell Summit · 874m</div>');
+
+  L.marker([55.7053, -5.2975], { icon: makeIcon('🏠') })
+    .addTo(map)
+    .bindPopup('<div class="popup-label">Base · Sat 20:00</div><div class="popup-title">Lochranza Youth Hostel & Hotel Bar</div>');
+
+  L.marker([55.7009, -5.2917], { icon: makeIcon('🥃') })
+    .addTo(map)
+    .bindPopup('<div class="popup-label">Activity · Sun 15:00</div><div class="popup-title">Isle of Arran Distillery · Tour & Tasting</div>');
+
+  // Ferry route: Ardrossan → Brodick
+  L.polyline([
+    [55.6417, -4.8167],
+    [55.6200, -4.9200],
+    [55.5900, -5.0400],
+    [55.5764, -5.1461],
+  ], {
+    color: '#c9842c',
+    weight: 2.5,
+    opacity: 0.85,
+    dashArray: '6, 4',
+  }).addTo(map).bindPopup('<div class="popup-label">CalMac Ferry · Sat & Sun</div><div class="popup-title">Ardrossan ↔ Brodick · 55 mins across the Firth of Clyde</div>');
+
+  // ScotRail: Glasgow → Ardrossan
+  L.polyline([
+    [55.8581, -4.2583],
+    [55.8300, -4.3800],
+    [55.8000, -4.5200],
+    [55.7600, -4.6400],
+    [55.7200, -4.7200],
+    [55.6700, -4.7800],
+    [55.6417, -4.8167],
+  ], {
+    color: '#7d6b8c',
+    weight: 2,
+    opacity: 0.75,
+    dashArray: '4, 4',
+  }).addTo(map).bindPopup('<div class="popup-label">ScotRail · Sat 08:30 & Sun 18:00</div><div class="popup-title">Glasgow Central ↔ Ardrossan Harbour · ~50 mins</div>');
+
+  // Hike route: Brodick → Goatfell
+  L.polyline([
+    [55.5764, -5.1461],
+    [55.5880, -5.1667],
+    [55.6000, -5.1800],
+    [55.6150, -5.1900],
+    [55.6267, -5.1983],
+  ], {
+    color: '#4caf7d',
+    weight: 2,
+    opacity: 0.7,
+  }).addTo(map).bindPopup('<div class="popup-label">Hike · Sat 12:30</div><div class="popup-title">Brodick → Goatfell Summit · 4–5 hrs return</div>');
+
+  // Bus 324: Brodick → Lochranza
+  L.polyline([
+    [55.5764, -5.1461],
+    [55.6100, -5.1600],
+    [55.6400, -5.1750],
+    [55.6567, -5.1817],
+    [55.6800, -5.2100],
+    [55.6950, -5.2500],
+    [55.7053, -5.2975],
+  ], {
+    color: '#7d6b8c',
+    weight: 2,
+    opacity: 0.6,
+    dashArray: '3, 5',
+  }).addTo(map).bindPopup('<div class="popup-label">Bus 324 · Sat 19:10 & Sun 10:30</div><div class="popup-title">Brodick ↔ Lochranza · ~40 mins coastal</div>');
+</script>
+
+</body>
+</html>
