@@ -32,6 +32,7 @@
     font-weight: 300;
     min-height: 100vh;
     overflow-x: hidden;
+    padding-bottom: 72px;
   }
 
   body::before {
@@ -691,9 +692,74 @@
       grid-template-columns: 1fr 1fr;
     }
   }
+  /* NAV */
+  .sitenav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    padding: 0;
+    background: rgba(5,8,14,0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .sitenav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 12px 20px;
+    text-decoration: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+    position: relative;
+  }
+
+  .sitenav-item:hover {
+    color: rgba(255,255,255,0.85);
+    background: rgba(255,255,255,0.04);
+  }
+
+  .sitenav-item .nav-emoji {
+    font-size: 1.4rem;
+    line-height: 1;
+    display: block;
+  }
+
+  .sitenav-item.active {
+    color: rgba(255,255,255,0.85);
+    cursor: default;
+  }
+
+  .sitenav-item-home:hover    { border-bottom-color: #7a9bac; color: #7a9bac; }
+  .sitenav-item-arran:hover   { border-bottom-color: #c9842c; color: #c9842c; }
+  .sitenav-item-norway:hover  { border-bottom-color: #c9a84c; color: #c9a84c; }
+  .sitenav-item-spain:hover   { border-bottom-color: #c23b22; color: #c23b22; }
+  .sitenav-item-ni:hover      { border-bottom-color: #b84e2b; color: #b84e2b; }
+  .sitenav-item-wye:hover     { border-bottom-color: #c8102e; color: #c8102e; }
+
+  .sitenav-item-home.active    { border-bottom-color: #7a9bac; color: #7a9bac; }
+  .sitenav-item-arran.active   { border-bottom-color: #c9842c; color: #c9842c; }
+  .sitenav-item-norway.active  { border-bottom-color: #c9a84c; color: #c9a84c; }
+  .sitenav-item-spain.active   { border-bottom-color: #c23b22; color: #c23b22; }
+  .sitenav-item-ni.active      { border-bottom-color: #b84e2b; color: #b84e2b; }
+  .sitenav-item-wye.active     { border-bottom-color: #c8102e; color: #c8102e; }
 </style>
 </head>
 <body>
+<nav class="sitenav" aria-label="Site navigation"><a class="sitenav-item sitenav-item-home" href="index.html"><span class="nav-emoji">🧔🏼‍♀️</span>Home</a><a class="sitenav-item sitenav-item-arran" href="arran.html"><span class="nav-emoji">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>Arran</a><a class="sitenav-item sitenav-item-norway" href="norway.html"><span class="nav-emoji">🇳🇴</span>Norway</a><a class="sitenav-item sitenav-item-spain" href="spain.html"><span class="nav-emoji">🇪🇸</span>España</a><span class="sitenav-item sitenav-item-ni active" aria-current="page"><span class="nav-emoji">🇬🇧</span>N. Ireland</span><a class="sitenav-item sitenav-item-wye" href="wye.html"><span class="nav-emoji">🏴󠁧󠁢󠁷󠁬󠁳󠁿</span>Wye</a></nav>
+
 <div class="container">
 
   <!-- HEADER -->
